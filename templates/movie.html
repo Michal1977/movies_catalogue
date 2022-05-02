@@ -1,0 +1,14 @@
+{% extends "index.html" %} {% block content %}
+
+{{ movie['title'] }}
+Genres:
+{% for genre in movie['genres'] %} {{ genre.name }} {% endfor %}
+Overview:
+{{ movie['overview'] }}
+Cast:
+{% for cast in credits['cast'] %}
+{{ cast.name }}
+
+{% endfor %}
+
+{% endblock %}
