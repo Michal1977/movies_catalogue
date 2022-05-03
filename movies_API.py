@@ -67,8 +67,8 @@ def get_now_playing_movies():
     return response.json()['results']
 
 
-def get_movie_details(id):
-    endpoint = f"https://api.themoviedb.org/3/movie/{id}"
+def get_movie_details(movie_id):
+    endpoint = f"https://api.themoviedb.org/3/movie/{movie_id}"
     api_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzY4ZDMxNDhjOTU3ZGIxMmQ5MmI0MmFiOTI0YjRiNCIsInN1YiI6IjYyNjkzMTE4NWFiODFhMTMyZTFmOTM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TTcpJnh0eCNiXJlTdIBLqNF6qcqeIm0_Li2fUKWtxMk"
     headers = {
         "Authorization": f"Bearer {api_token}"
@@ -77,14 +77,19 @@ def get_movie_details(id):
     return response.json()
 
 
-def get_movie_credits(id):
-    endpoint = f"https://api.themoviedb.org/3/movie/{id}/credits"
+def get_movie_credits(movie_id):
+    endpoint = f"https://api.themoviedb.org/3/movie/{movie_id}/credits"
     api_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzY4ZDMxNDhjOTU3ZGIxMmQ5MmI0MmFiOTI0YjRiNCIsInN1YiI6IjYyNjkzMTE4NWFiODFhMTMyZTFmOTM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TTcpJnh0eCNiXJlTdIBLqNF6qcqeIm0_Li2fUKWtxMk"
     headers = {
         "Authorization": f"Bearer {api_token}"
     }
     response = requests.get(endpoint, headers=headers)
-    return response.json()
+    return response.json()["cast"][:6]
+
+
+def get_cast(how_many, movie_id):
+    data = get_movie_credits(movie_id)
+    return data[:how_many]
 
 
 def get_poster_url(conf, poster_api_path, size="w342"):
@@ -95,8 +100,18 @@ def get_poster_url(conf, poster_api_path, size="w342"):
     return f"{base_url}{size}{poster_api_path}"
 
 
-def get_backdrop_url(conf, backdrop_api_path, size="w300"):
+def get_backdrop_url(conf, backdrop_api_path, size="w780"):
     base_url = conf['secure_base_url']
     if size not in conf['backdrop_sizes']:
         size = conf['backdrop_sizes'][0]
     return f"{base_url}{size}{backdrop_api_path}"
+
+
+def get_collections(movie_id):
+    endpoint = f"https://api.themoviedb.org/3/movie/{movie_id}/lists"
+    api_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzY4ZDMxNDhjOTU3ZGIxMmQ5MmI0MmFiOTI0YjRiNCIsInN1YiI6IjYyNjkzMTE4NWFiODFhMTMyZTFmOTM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TTcpJnh0eCNiXJlTdIBLqNF6qcqeIm0_Li2fUKWtxMk"
+    headers = {
+        "Authorization": f"Bearer {api_token}"
+    }
+    response = requests.get(endpoint, headers=headers)
+    return response.json()["name"]
