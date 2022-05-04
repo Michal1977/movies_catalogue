@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request
 
-from movies_API import get_backdrop_url, get_configuration, get_movie_credits, get_movie_details, get_popular_movies, \
-    get_poster_url, get_upcoming_movies, get_movies, get_top_rated_movies, get_now_playing_movies, get_cast, \
-    get_collections
+from movies_API import get_backdrop_url, get_configuration, get_movie_credits, get_movie_details, get_poster_url, get_movies, get_cast
+
 
 app = Flask(__name__)
 
@@ -22,24 +21,18 @@ def utility_processor():
 @app.route('/')
 def homepage():
     selected_list = request.args.get('list_type', "popular")
+    lists = ['popular', 'upcoming', 'top_rated', 'now_playing']
+    if selected_list not in lists:
+        selected_list = 'popular'
     movies = get_movies(how_many=8, list_type=selected_list)
     config = get_configuration()
-    return render_template("homepage.html", movies=movies, current_list=selected_list, config=config)
-
-
-#@app.route('/upcoming')
-#def upcoming():
-    #movies = get_upcoming_movies()
-    #config = get_configuration()
-    #return render_template("homepage.html", movies=movies, config=config)
+    return render_template("homepage.html", movies=movies, current_list=selected_list, config=config, lists=lists)
 
 
 @app.route('/movies/<movie_id>')
 def one_movie(movie_id):
-    #selected_movie = request.args.get('movie_id', 414906)
     config = get_configuration()
     movie_details = get_movie_details(movie_id)
-    #cast = get_movie_credits(movie_id)
     cast = get_cast(how_many=4, movie_id=movie_id)
     return render_template("movie_details.html", movie=movie_details, config=config, cast=cast)
 
