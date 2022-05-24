@@ -1,6 +1,21 @@
 import requests
 
 
+#def call_tmdb_api(endpoint):
+#   full_url = f"https://api.themoviedb.org/3/{endpoint}"
+#   api_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzY4ZDMxNDhjOTU3ZGIxMmQ5MmI0MmFiOTI0YjRiNCIsInN1YiI6IjYyNjkzMTE4NWFiODFhMTMyZTFmOTM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TTcpJnh0eCNiXJlTdIBLqNF6qcqeIm0_Li2fUKWtxMk"
+#   headers = {
+#       "Authorization": f"Bearer {api_token}"
+#   }
+#   response = requests.get(full_url, headers=headers)
+#   response.raise_for_status()
+#   return response.json()
+
+
+#def get_movies_list(list_type):
+#  return call_tmdb_api(f"movie/{list_type}")
+
+
 def get_configuration():
     endpoint = "https://api.themoviedb.org/3/configuration"
     api_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYzY4ZDMxNDhjOTU3ZGIxMmQ5MmI0MmFiOTI0YjRiNCIsInN1YiI6IjYyNjkzMTE4NWFiODFhMTMyZTFmOTM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.TTcpJnh0eCNiXJlTdIBLqNF6qcqeIm0_Li2fUKWtxMk"
@@ -23,7 +38,7 @@ def get_popular_movies():
 
 def get_movies(how_many, list_type):
     data = get_movies_list(list_type)
-    return data[:how_many]
+    return data[:min(how_many, len(data))]
 
 
 def get_movies_list(list_type):
